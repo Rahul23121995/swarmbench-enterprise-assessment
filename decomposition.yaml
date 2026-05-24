@@ -1,0 +1,89 @@
+coordination_pattern: fan-out-synthesize
+
+sub_tasks:
+  - id: fix_login_locator
+    description: >
+      Inspect and fix the outdated login locator in `/workspace/tests/pages/login_page.py`.
+      Change the locator syntax to use name 'login' instead of id 'submit'.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_wait_utility
+    description: >
+      Optimize the wait implementation in `/workspace/tests/utils/waits.py`.
+      Replace the hardcoded `time.sleep(10)` with an explicit polling loop that checks the wait condition every 0.5 seconds up to 10 seconds.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_api_validation
+    description: >
+      Identify and correct the API assertion in `/workspace/tests/api/user_client.py`.
+      Update the assertion checking the user registration POST response to expect `201` instead of `200`.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_csv_parser
+    description: >
+      Rewrite the CSV mapper in `/workspace/tests/utils/data_mapper.py` to be robust.
+      Replace basic line split parsing with Python's standard `csv.reader` to correctly parse commas in quoted fields, and skip empty or whitespace-only lines.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_checkout_tax
+    description: >
+      Update the checkout test in `/workspace/tests/e2e/test_checkout.py`.
+      Correct the expected international tax rate calculation multiplier from `0.10` to `0.12` to match updated financial specifications.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_retry_decorator
+    description: >
+      Refactor the test retry mechanism in `/workspace/tests/runners/retry_decorator.py`.
+      Update the exception handling inside the decorator to catch `AssertionError` (or `BaseException`/`Exception`) so that flaky pytest test failures are caught and retried.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_parallel_logging
+    description: >
+      Enhance thread safety inside `/workspace/tests/runners/parallel_executor.py`.
+      Introduce a `threading.Lock()` mutex lock to protect file writes to `test_run.log` from parallel execution threads.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_browser_cleanup
+    description: >
+      Fix the webdriver resource leak in `/workspace/tests/conftest.py`.
+      Wrap the driver execution block in a `try...finally` layout so that `driver.quit()` is guaranteed to execute even if setup or execution exceptions occur.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_reporter_crash
+    description: >
+      Protect the automated reporter inside `/workspace/tests/reporting/html_reporter.py` from division-by-zero crashes.
+      Add a safety guard: if `total_count` is 0, the computed pass percentage must be `0.0`.
+    depends_on: []
+    parallel_group: fix
+
+  - id: fix_jenkins_syntax
+    description: >
+      Repair the groovy parsing error in the CI pipeline at `/workspace/.jenkins/Jenkinsfile`.
+      Fix the syntax error (e.g. unclosed single quote in `sh 'pytest ...`) so that the Jenkins parser can process the build definition.
+    depends_on: []
+    parallel_group: fix
+
+  - id: synthesize_and_validate
+    description: >
+      Reconcile all file edits made by the individual sub-agents.
+      Run the complete pytest suite, verify that no regressions have been introduced, and ensure all ten features run completely and cleanly.
+    depends_on:
+      - fix_login_locator
+      - fix_wait_utility
+      - fix_api_validation
+      - fix_csv_parser
+      - fix_checkout_tax
+      - fix_retry_decorator
+      - fix_parallel_logging
+      - fix_browser_cleanup
+      - fix_reporter_crash
+      - fix_jenkins_syntax
+    parallel_group: synthesize

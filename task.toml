@@ -1,0 +1,25 @@
+[task]
+name = "swarmbench/swarmbench-enterprise-assessment"
+description = "Repair ten independent defects across an enterprise-grade Python QA automation and CI infrastructure, including locator issues, dynamic waits, API assertions, log thread safety, CSV mapping, retry systems, browser leakages, and pipeline syntax errors."
+
+[metadata]
+verifier_type = "executable"
+domain = "code-swe"
+coordination_pattern = "fan-out-synthesize"
+human_solving_hours_estimate = 8.0
+human_solving_hours_justification = "Fixing ten bugs spread across ten distinct modules in an enterprise-grade QA suite requires navigating through page objects, wait utilities, API clients, logging synchronization layers, csv data mappers, conftest fixtures, retry decorators, html reporters, and Jenkins CI configurations. A senior QA or SWE automation engineer would spend about 45 minutes per bug to locate, analyze, write, and verify the patch, resulting in roughly 8 hours total."
+estimated_sub_agents = 11
+input_token_estimate = 300000
+reference_link = "https://github.com/pytest-dev/pytest"
+why_multi_agent = "An enterprise QA suite is highly modular, containing 10 independent defects across 10 distinct files. A single agent will struggle with context overload, attention decay, and sequential timeout pressure as it attempts to parse and repair files across page objects, utilities, API clients, CI pipelines, and thread logging models. In contrast, a multi-agent system can decompose this into 10 parallel sub-tasks where independent agents focus on one specific defect, and a final synthesizer validates the consolidated framework without regressions."
+
+[agent]
+timeout_sec = 600
+
+[verifier]
+timeout_sec = 300
+
+[environment]
+cpus = 2
+memory_mb = 4096
+build_timeout_sec = 600

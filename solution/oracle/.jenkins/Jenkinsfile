@@ -1,0 +1,12 @@
+pipeline {
+    agent any
+    stages {
+        stage('Test') {
+            steps {
+                // Fixed: added closing single quote to the shell step
+                sh 'pytest --maxfail 2'
+
+            }
+        }
+    }
+}
